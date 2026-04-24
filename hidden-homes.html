@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hidden Homes — NPWS Ireland</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #1C4D2F;
+    --green-dark: #142E1C;
+    --terracotta: #A03C2D;
+    --terracotta-deep: #8A2F22;
+    --gold: #C8A84B;
+    --parchment: #F7F4EE;
+    --charcoal: #1A1A18;
+    --cream: #F2EDE3;
+    --near-black: #111410;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--parchment);
+    color: var(--charcoal);
+    overflow-x: hidden;
+  }
+
+  /* ─── NAV ─────────────────────────────────── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 20px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.4s ease, transform 0.4s ease, background 0.4s ease;
+    pointer-events: none;
+  }
+  nav.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+    background: rgba(20, 46, 28, 0.92);
+    backdrop-filter: blur(8px);
+  }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .nav-logo-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--gold);
+    letter-spacing: 0.03em;
+  }
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: rgba(242,237,227,0.75);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* ─── HERO ────────────────────────────────── */
+  #hero {
+    height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to bottom, transparent 0%, rgba(20,46,28,0.6) 100%),
+      url('https://images.unsplash.com/photo-1586348943529-beaae6c28db9?w=1600&q=80') center/cover no-repeat;
+    transform: scale(1.05);
+    animation: heroReveal 1.2s ease forwards;
+  }
+  @keyframes heroReveal {
+    from { opacity: 0; transform: scale(1.08); }
+    to   { opacity: 1; transform: scale(1.05); }
+  }
+  /* Subtle texture overlay */
+  .hero-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.3;
+    mix-blend-mode: overlay;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 0 24px 80px;
+    max-width: 720px;
+    opacity: 0;
+    animation: heroTextReveal 0.8s ease 0.6s forwards;
+  }
+  @keyframes heroTextReveal {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hero-eyebrow {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: heroTextReveal 0.8s ease 0.8s forwards;
+  }
+  .hero-h1 {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--cream);
+    line-height: 1.12;
+    margin-bottom: 20px;
+  }
+  .hero-h1 .line1 {
+    display: block;
+    font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+    font-style: italic;
+    font-weight: 300;
+    opacity: 0;
+    animation: heroTextReveal 0.8s ease 0.95s forwards;
+  }
+  .hero-h1 .line2 {
+    display: block;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 500;
+    font-style: normal;
+    margin-top: 4px;
+    opacity: 0;
+    animation: heroTextReveal 0.8s ease 1.1s forwards;
+  }
+  .hero-sub {
+    font-size: clamp(0.9rem, 1.4vw, 1.05rem);
+    font-weight: 300;
+    color: rgba(242,237,227,0.82);
+    line-height: 1.65;
+    max-width: 520px;
+    margin: 0 auto 32px;
+    opacity: 0;
+    animation: heroTextReveal 0.8s ease 1.25s forwards;
+  }
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--terracotta);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 14px 28px;
+    border-radius: 4px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.25s ease, transform 0.25s ease;
+    opacity: 0;
+    animation: heroTextReveal 0.8s ease 1.4s forwards;
+  }
+  .btn-primary:hover {
+    background: var(--terracotta-deep);
+    transform: translateY(-2px);
+  }
+  .scroll-indicator {
+    position: absolute;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    animation: pulse 2.4s ease-in-out infinite;
+    opacity: 0;
+    animation-delay: 1.8s;
+    animation-fill-mode: forwards;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.5; transform: translateX(-50%) translateY(0); }
+    50% { opacity: 1; transform: translateX(-50%) translateY(4px); }
+  }
+  .scroll-indicator svg { width: 24px; height: 24px; stroke: rgba(255,255,255,0.6); }
+
+  /* ─── SCROLL REVEAL ───────────────────────── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.35s; }
+
+  /* ─── SECTION SHARED ──────────────────────── */
+  .section-label {
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  /* ─── SECTION 2 — THE PROBLEM ─────────────── */
+  #problem {
+    background: var(--parchment);
+    padding: 100px 48px;
+  }
+  .problem-inner {
+    max-width: 1160px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .problem-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.9rem, 3.2vw, 2.8rem);
+    font-weight: 500;
+    color: var(--green);
+    line-height: 1.2;
+    margin-bottom: 24px;
+  }
+  .problem-body {
+    font-size: 1.02rem;
+    line-height: 1.75;
+    color: var(--charcoal);
+    max-width: 460px;
+    margin-bottom: 28px;
+  }
+  .problem-body p + p { margin-top: 16px; }
+  .problem-body em {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--green);
+  }
+  .stat-pills {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 32px;
+  }
+  .stat-pill {
+    background: var(--green);
+    border-radius: 3px;
+    padding: 12px 18px;
+  }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--gold);
+    display: block;
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.72rem;
+    color: rgba(242,237,227,0.7);
+    letter-spacing: 0.04em;
+    margin-top: 4px;
+    display: block;
+  }
+  .nest-image-wrap {
+    position: relative;
+  }
+  .nest-image {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    border-radius: 2px;
+    display: block;
+    background: #4a6741 url('https://images.unsplash.com/photo-1622371292620-2fdfb28d4174?w=800&q=80') center/cover;
+  }
+  /* Placeholder nest image using CSS */
+  .nest-image-placeholder {
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: linear-gradient(135deg, #4a6741 0%, #3a5a32 40%, #2d4a28 60%, #4a6741 100%);
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .nest-image-placeholder::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 60% 40% at 45% 55%, rgba(100,80,40,0.5) 0%, transparent 60%),
+      repeating-linear-gradient(80deg, transparent, transparent 8px, rgba(30,60,20,0.15) 8px, rgba(30,60,20,0.15) 10px),
+      repeating-linear-gradient(10deg, transparent, transparent 12px, rgba(20,50,15,0.1) 12px, rgba(20,50,15,0.1) 14px);
+  }
+  /* SVG nest eggs inline */
+  .nest-svg-wrap {
+    position: absolute;
+    bottom: 30%;
+    left: 42%;
+    transform: translate(-50%, 50%);
+    opacity: 0.9;
+  }
+  .img-caption {
+    margin-top: 10px;
+    font-size: 0.78rem;
+    font-style: italic;
+    color: rgba(26,26,24,0.55);
+    text-align: center;
+  }
+
+  /* ─── SECTION 3 — THE SYMBOL ──────────────── */
+  #symbol {
+    background: var(--green);
+    padding: 100px 48px;
+    text-align: center;
+  }
+  .symbol-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 400;
+    color: var(--cream);
+    margin-bottom: 48px;
+  }
+  .symbol-icon {
+    margin: 0 auto 56px;
+    width: 110px;
+    height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: symbolPulse 3s ease-in-out infinite;
+  }
+  @keyframes symbolPulse {
+    0%, 100% { filter: drop-shadow(0 0 0px rgba(200,168,75,0)); }
+    50% { filter: drop-shadow(0 0 16px rgba(200,168,75,0.4)); }
+  }
+  .steps-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    max-width: 880px;
+    margin: 0 auto 40px;
+  }
+  .step-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(200,168,75,0.2);
+    border-radius: 4px;
+    padding: 28px 24px;
+    text-align: left;
+  }
+  .step-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .step-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--cream);
+    margin-bottom: 8px;
+  }
+  .step-body {
+    font-size: 0.85rem;
+    color: rgba(242,237,227,0.65);
+    line-height: 1.6;
+  }
+  .symbol-subnote {
+    font-size: 0.82rem;
+    font-style: italic;
+    color: rgba(242,237,227,0.45);
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ─── SECTION 4 — THE MAP ─────────────────── */
+  #map-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 560px;
+  }
+  .map-panel {
+    background: var(--green-dark);
+    position: relative;
+    overflow: hidden;
+    min-height: 480px;
+  }
+  /* Ireland SVG map */
+  .ireland-map-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    position: relative;
+  }
+  .map-marker {
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .map-marker:hover { transform: scale(1.3); }
+  .map-pulse {
+    animation: mapPulseAnim 2.5s ease-out infinite;
+    transform-origin: center;
+  }
+  @keyframes mapPulseAnim {
+    0% { opacity: 0.7; r: 6; }
+    70% { opacity: 0; r: 18; }
+    100% { opacity: 0; r: 18; }
+  }
+  .map-text-panel {
+    background: var(--parchment);
+    padding: 64px 56px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .map-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 2.8vw, 2.5rem);
+    font-weight: 500;
+    color: var(--green);
+    line-height: 1.2;
+    margin-bottom: 20px;
+  }
+  .map-body {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--charcoal);
+    margin-bottom: 32px;
+    max-width: 380px;
+  }
+  .btn-full {
+    display: block;
+    width: 100%;
+    background: var(--terracotta);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 16px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.25s, transform 0.25s;
+    margin-bottom: 14px;
+  }
+  .btn-full:hover { background: var(--terracotta-deep); transform: translateY(-2px); }
+  .map-secondary-link {
+    font-size: 0.82rem;
+    color: var(--charcoal);
+    text-align: center;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+  }
+  .map-secondary-link:hover { opacity: 1; }
+
+  /* ─── SECTION 5 — PARTNERS ────────────────── */
+  #partners {
+    background: var(--parchment);
+    padding: 80px 48px;
+    text-align: center;
+  }
+  .partners-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.7rem;
+    font-weight: 500;
+    color: var(--green);
+    margin-bottom: 12px;
+  }
+  .partners-sub {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: rgba(26,26,24,0.6);
+    max-width: 500px;
+    margin: 0 auto 40px;
+  }
+  .partner-logos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-bottom: 36px;
+  }
+  .partner-logo-item {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(26,26,24,0.35);
+    padding: 8px 16px;
+    border: 1px solid rgba(26,26,24,0.15);
+    border-radius: 2px;
+    transition: color 0.25s, border-color 0.25s;
+    cursor: pointer;
+  }
+  .partner-logo-item:hover {
+    color: var(--green);
+    border-color: var(--green);
+  }
+  .social-counter {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .counter-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: var(--gold);
+  }
+  .counter-label {
+    font-size: 0.88rem;
+    color: rgba(26,26,24,0.55);
+  }
+
+  /* ─── SECTION 6 — SECONDARY ACTIONS ──────── */
+  #actions {
+    background: var(--green);
+    padding: 80px 48px;
+  }
+  .actions-grid {
+    max-width: 1060px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .action-card {
+    border: 1px solid rgba(200,168,75,0.2);
+    border-radius: 4px;
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+  }
+  .action-icon {
+    width: 44px;
+    height: 44px;
+    margin-bottom: 18px;
+    color: var(--gold);
+  }
+  .action-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--cream);
+    margin-bottom: 10px;
+  }
+  .action-body {
+    font-size: 0.85rem;
+    color: rgba(242,237,227,0.6);
+    line-height: 1.65;
+    flex: 1;
+    margin-bottom: 24px;
+  }
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    padding: 10px 18px;
+    border-radius: 3px;
+    text-decoration: none;
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.25s, color 0.25s, transform 0.25s;
+    align-self: flex-start;
+  }
+  .btn-ghost:hover {
+    background: var(--gold);
+    color: var(--green);
+    transform: translateY(-2px);
+  }
+
+  /* ─── FOOTER ──────────────────────────────── */
+  footer {
+    background: var(--near-black);
+    padding: 52px 48px 36px;
+  }
+  .footer-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 40px;
+    margin-bottom: 36px;
+    flex-wrap: wrap;
+  }
+  .footer-brand .nav-logo-text {
+    font-size: 1.3rem;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .footer-tagline {
+    font-size: 0.78rem;
+    color: rgba(242,237,227,0.35);
+    letter-spacing: 0.04em;
+  }
+  .footer-nav {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .footer-nav a {
+    font-size: 0.78rem;
+    color: rgba(242,237,227,0.45);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-nav a:hover { color: var(--gold); }
+  .footer-partners {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .footer-partner {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(242,237,227,0.25);
+  }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.07);
+    padding-top: 24px;
+    text-align: center;
+  }
+  .footer-copy {
+    font-size: 0.74rem;
+    font-style: italic;
+    color: rgba(242,237,227,0.25);
+  }
+
+  /* ─── DIVIDER ─────────────────────────────── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(26,26,24,0.12), transparent);
+    margin: 0 48px;
+  }
+
+  /* ─── RESPONSIVE ──────────────────────────── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    #problem { padding: 64px 24px; }
+    .problem-inner { grid-template-columns: 1fr; gap: 40px; }
+    #symbol { padding: 64px 24px; }
+    .steps-row { grid-template-columns: 1fr; gap: 16px; max-width: 480px; margin: 0 auto 32px; }
+    #map-section { grid-template-columns: 1fr; }
+    .map-panel { min-height: 360px; }
+    .ireland-map-container { padding: 24px; }
+    .map-text-panel { padding: 40px 24px; }
+    #partners { padding: 56px 24px; }
+    #actions { padding: 56px 24px; }
+    .actions-grid { grid-template-columns: 1fr; gap: 16px; }
+    footer { padding: 40px 24px 28px; }
+    .footer-top { flex-direction: column; gap: 24px; }
+    .hero-content { padding: 0 20px 72px; }
+    .divider { margin: 0 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav id="main-nav">
+  <a href="#" class="nav-logo">
+    <svg width="26" height="26" viewBox="0 0 48 48" fill="none">
+      <path d="M12 36c0-8 4-14 12-16 8 2 12 8 12 16" stroke="#C8A84B" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+      <ellipse cx="24" cy="34" rx="8" ry="4" fill="rgba(200,168,75,0.15)" stroke="#C8A84B" stroke-width="1.5"/>
+      <ellipse cx="20" cy="32.5" rx="2.5" ry="2" fill="#C8A84B" opacity="0.8"/>
+      <ellipse cx="24" cy="33.5" rx="2.5" ry="2" fill="#C8A84B" opacity="0.9"/>
+      <ellipse cx="28" cy="32.5" rx="2.5" ry="2" fill="#C8A84B" opacity="0.75"/>
+      <path d="M8 28s4-4 12-6M40 28s-4-4-12-6" stroke="#C8A84B" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+    </svg>
+    <span class="nav-logo-text">Hidden Homes</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#problem">The Problem</a></li>
+    <li><a href="#symbol">The Symbol</a></li>
+    <li><a href="#map-section">Map</a></li>
+    <li><a href="#partners">Partners</a></li>
+    <li><a href="#actions">Get Involved</a></li>
+  </ul>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Wader Season · March – July</p>
+    <h1 class="hero-h1">
+      <span class="line1">"Not all homes have walls."</span>
+      <span class="line2">Help protect Ireland's Hidden Homes.</span>
+    </h1>
+    <p class="hero-sub">Ground nesting waders are among our most endangered birds. A few simple actions during wader season can help them survive.</p>
+    <a href="#map-section" class="btn-primary">
+      Check the map before you step
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 7h8M7 3l4 4-4 4"/></svg>
+    </a>
+  </div>
+  <div class="scroll-indicator">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="6 9 12 15 18 9"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ─── SECTION 2 — THE PROBLEM ─── -->
+<section id="problem">
+  <div class="problem-inner">
+    <div>
+      <p class="section-label reveal">The Hidden Homes</p>
+      <h2 class="problem-heading reveal reveal-delay-1">They nest in the open. That's what makes them vulnerable.</h2>
+      <div class="problem-body reveal reveal-delay-2">
+        <p>Ground nesting waders — curlew, lapwing, golden plover, redshank — lay their eggs directly on the ground. No tree. No hedgerow. No wall. Just a shallow scrape in the grass, perfectly camouflaged, <em>completely exposed</em> to anyone who doesn't know to look.</p>
+        <p style="margin-top:16px">Ireland holds internationally important populations of these birds. But disturbance during nesting season — from walkers, dogs, and vehicles — is one of the leading causes of nest failure.</p>
+        <p style="margin-top:16px"><em>A nest takes seconds to destroy. It takes a season to lose.</em></p>
+      </div>
+      <div class="stat-pills reveal reveal-delay-3">
+        <div class="stat-pill">
+          <span class="stat-num">95%</span>
+          <span class="stat-label">Curlew decline since 1980s</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-num">Mar–Jul</span>
+          <span class="stat-label">Active nesting season</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-num">1</span>
+          <span class="stat-label">Disturbance can cause abandonment</span>
+        </div>
+      </div>
+    </div>
+    <div class="nest-image-wrap reveal reveal-delay-2">
+      <!-- CSS illustrated nest -->
+      <div class="nest-image-placeholder">
+        <svg width="220" height="120" viewBox="0 0 220 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="nest-svg-wrap" style="position:relative;transform:none;bottom:auto;left:auto;">
+          <!-- Nest bowl -->
+          <ellipse cx="110" cy="88" rx="70" ry="22" fill="rgba(80,55,25,0.6)" stroke="rgba(120,85,35,0.7)" stroke-width="1.5"/>
+          <!-- Nest strands -->
+          <path d="M55 80 Q80 70 110 72 Q140 70 165 80" stroke="rgba(100,70,30,0.8)" stroke-width="2" fill="none"/>
+          <path d="M50 85 Q85 75 110 78 Q135 75 170 85" stroke="rgba(110,75,32,0.7)" stroke-width="1.5" fill="none"/>
+          <path d="M48 90 Q80 82 110 84 Q140 82 172 90" stroke="rgba(90,65,28,0.6)" stroke-width="1.5" fill="none"/>
+          <!-- Eggs -->
+          <ellipse cx="93" cy="76" rx="14" ry="11" fill="#C8B48A" stroke="rgba(60,45,20,0.3)" stroke-width="1"/>
+          <ellipse cx="112" cy="74" rx="15" ry="12" fill="#D4BC96" stroke="rgba(60,45,20,0.3)" stroke-width="1"/>
+          <ellipse cx="130" cy="76" rx="14" ry="11" fill="#C2AE84" stroke="rgba(60,45,20,0.3)" stroke-width="1"/>
+          <!-- Egg speckles -->
+          <circle cx="89" cy="74" r="1.2" fill="rgba(60,40,20,0.4)"/>
+          <circle cx="94" cy="70" r="1" fill="rgba(60,40,20,0.35)"/>
+          <circle cx="98" cy="76" r="1.1" fill="rgba(60,40,20,0.3)"/>
+          <circle cx="109" cy="71" r="1.2" fill="rgba(60,40,20,0.35)"/>
+          <circle cx="115" cy="68" r="1" fill="rgba(60,40,20,0.3)"/>
+          <circle cx="118" cy="75" r="1.3" fill="rgba(60,40,20,0.4)"/>
+          <circle cx="127" cy="73" r="1.1" fill="rgba(60,40,20,0.35)"/>
+          <circle cx="133" cy="70" r="1" fill="rgba(60,40,20,0.3)"/>
+          <circle cx="135" cy="78" r="1.2" fill="rgba(60,40,20,0.35)"/>
+        </svg>
+      </div>
+      <p class="img-caption">Can you see it? There's a nest in this photograph.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ─── SECTION 3 — THE SYMBOL ─── -->
+<section id="symbol">
+  <h2 class="symbol-heading reveal">When you see this symbol — pause.</h2>
+
+  <div class="symbol-icon reveal reveal-delay-1">
+    <svg width="110" height="110" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Hands cupping -->
+      <path d="M20 68 Q18 60 22 52 Q28 44 36 46 Q32 54 34 62 Q38 70 48 72" stroke="#C8A84B" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <path d="M90 68 Q92 60 88 52 Q82 44 74 46 Q78 54 76 62 Q72 70 62 72" stroke="#C8A84B" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <!-- Nest base -->
+      <ellipse cx="55" cy="78" rx="30" ry="10" fill="rgba(200,168,75,0.15)" stroke="#C8A84B" stroke-width="2"/>
+      <!-- Nest weave lines -->
+      <path d="M30 76 Q42 70 55 72 Q68 70 80 76" stroke="#C8A84B" stroke-width="1.5" fill="none" opacity="0.5"/>
+      <path d="M28 80 Q42 74 55 76 Q68 74 82 80" stroke="#C8A84B" stroke-width="1.2" fill="none" opacity="0.4"/>
+      <!-- Three eggs -->
+      <ellipse cx="44" cy="72" rx="8" ry="6.5" fill="rgba(200,168,75,0.75)" stroke="#C8A84B" stroke-width="1.5"/>
+      <ellipse cx="55" cy="70" rx="9" ry="7" fill="rgba(200,168,75,0.85)" stroke="#C8A84B" stroke-width="1.5"/>
+      <ellipse cx="66" cy="72" rx="8" ry="6.5" fill="rgba(200,168,75,0.7)" stroke="#C8A84B" stroke-width="1.5"/>
+      <!-- Speckles -->
+      <circle cx="42" cy="71" r="1" fill="rgba(100,70,20,0.5)"/>
+      <circle cx="46" cy="74" r="0.8" fill="rgba(100,70,20,0.4)"/>
+      <circle cx="53" cy="68" r="1" fill="rgba(100,70,20,0.45)"/>
+      <circle cx="57" cy="72" r="0.9" fill="rgba(100,70,20,0.4)"/>
+      <circle cx="64" cy="70" r="1" fill="rgba(100,70,20,0.45)"/>
+      <circle cx="67" cy="74" r="0.8" fill="rgba(100,70,20,0.4)"/>
+    </svg>
+  </div>
+
+  <div class="steps-row">
+    <div class="step-card reveal">
+      <div class="step-num">01</div>
+      <div class="step-title">Pause</div>
+      <div class="step-body">Stop before you step into long grass, rush, or heathland between March and July.</div>
+    </div>
+    <div class="step-card reveal reveal-delay-1">
+      <div class="step-num">02</div>
+      <div class="step-title">Look</div>
+      <div class="step-body">Scan the ground ahead. Nests are shallow scrapes — four speckled eggs, easy to miss.</div>
+    </div>
+    <div class="step-card reveal reveal-delay-2">
+      <div class="step-num">03</div>
+      <div class="step-title">Protect</div>
+      <div class="step-body">Keep to marked paths. Keep dogs on a short lead. Move away quietly if you see a bird alarm-calling.</div>
+    </div>
+  </div>
+
+  <p class="symbol-subnote reveal reveal-delay-3">The symbol appears on trailhead signs, gate posts, and car park notices across participating sites.</p>
+</section>
+
+<!-- ─── SECTION 4 — THE MAP ─── -->
+<section id="map-section">
+  <div class="map-panel">
+    <div class="ireland-map-container">
+      <!-- Ireland SVG map with nest markers -->
+      <svg viewBox="0 0 340 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:340px;height:auto;">
+        <!-- Ireland outline - simplified -->
+        <path d="
+          M165 18 Q175 16 185 18 Q210 20 225 30 Q248 40 260 55 Q272 68 275 85 
+          Q278 100 272 115 Q280 130 278 148 Q282 165 276 180 Q285 198 280 218 
+          Q275 238 262 255 Q250 270 235 280 Q220 292 200 298 Q180 308 160 310 
+          Q138 314 118 308 Q96 302 80 288 Q62 274 52 256 Q40 238 38 218 
+          Q34 198 40 178 Q44 158 42 138 Q40 118 48 100 Q55 82 68 68 
+          Q80 54 96 44 Q112 34 130 26 Q148 18 165 18Z
+        " fill="#1a3d25" stroke="rgba(200,168,75,0.3)" stroke-width="1.5"/>
+
+        <!-- Internal topography hints -->
+        <path d="M120 120 Q150 110 180 125 Q200 135 185 160 Q170 180 145 170 Q125 155 120 120Z" fill="rgba(200,168,75,0.04)" stroke="none"/>
+        <path d="M80 200 Q100 190 120 200 Q115 220 95 225 Q75 220 80 200Z" fill="rgba(200,168,75,0.04)" stroke="none"/>
+        <path d="M200 220 Q220 215 235 230 Q230 248 215 250 Q200 245 200 220Z" fill="rgba(200,168,75,0.04)" stroke="none"/>
+
+        <!-- Nest site markers -->
+        <!-- Donegal / NW -->
+        <g class="map-marker">
+          <circle cx="115" cy="72" r="18" fill="rgba(200,168,75,0.08)" class="map-pulse"/>
+          <circle cx="115" cy="72" r="7" fill="rgba(200,168,75,0.2)" stroke="rgba(200,168,75,0.8)" stroke-width="1.5"/>
+          <circle cx="115" cy="72" r="3.5" fill="#C8A84B"/>
+        </g>
+        <!-- Shannon / Midwest -->
+        <g class="map-marker" style="animation-delay:0.6s">
+          <circle cx="100" cy="210" r="18" fill="rgba(200,168,75,0.08)" class="map-pulse"/>
+          <circle cx="100" cy="210" r="7" fill="rgba(200,168,75,0.2)" stroke="rgba(200,168,75,0.8)" stroke-width="1.5"/>
+          <circle cx="100" cy="210" r="3.5" fill="#C8A84B"/>
+        </g>
+        <!-- Wicklow / SE -->
+        <g class="map-marker" style="animation-delay:1.2s">
+          <circle cx="215" cy="195" r="18" fill="rgba(200,168,75,0.08)" class="map-pulse"/>
+          <circle cx="215" cy="195" r="7" fill="rgba(200,168,75,0.2)" stroke="rgba(200,168,75,0.8)" stroke-width="1.5"/>
+          <circle cx="215" cy="195" r="3.5" fill="#C8A84B"/>
+        </g>
+        <!-- Cork / SW -->
+        <g class="map-marker" style="animation-delay:0.9s">
+          <circle cx="118" cy="298" r="18" fill="rgba(200,168,75,0.08)" class="map-pulse"/>
+          <circle cx="118" cy="298" r="7" fill="rgba(200,168,75,0.2)" stroke="rgba(200,168,75,0.8)" stroke-width="1.5"/>
+          <circle cx="118" cy="298" r="3.5" fill="#C8A84B"/>
+        </g>
+        <!-- Mayo / W -->
+        <g class="map-marker" style="animation-delay:1.5s">
+          <circle cx="78" cy="148" r="18" fill="rgba(200,168,75,0.08)" class="map-pulse"/>
+          <circle cx="78" cy="148" r="7" fill="rgba(200,168,75,0.2)" stroke="rgba(200,168,75,0.8)" stroke-width="1.5"/>
+          <circle cx="78" cy="148" r="3.5" fill="#C8A84B"/>
+        </g>
+        <!-- Label -->
+        <text x="170" y="355" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="9" fill="rgba(200,168,75,0.4)" letter-spacing="1.5">ACTIVE HIDDEN HOMES SITES</text>
+      </svg>
+    </div>
+  </div>
+  <div class="map-text-panel">
+    <p class="section-label reveal">Active Season · 2025</p>
+    <h2 class="map-heading reveal reveal-delay-1">Check the map before you step.</h2>
+    <p class="map-body reveal reveal-delay-2">Find Hidden Homes sites near you. See which areas are active this season and plan your route to avoid nesting ground.</p>
+    <a href="#" class="btn-full reveal reveal-delay-3">Open the map →</a>
+    <a href="#" class="map-secondary-link reveal reveal-delay-3">Download the site PDF instead</a>
+  </div>
+</section>
+
+<!-- ─── SECTION 5 — PARTNERS ─── -->
+<section id="partners">
+  <h2 class="partners-heading reveal">Every Nest Counts.</h2>
+  <p class="partners-sub reveal reveal-delay-1">Hidden Homes is a national campaign delivered in partnership with conservation organisations and landowners across Ireland.</p>
+  <div class="partner-logos reveal reveal-delay-2">
+    <div class="partner-logo-item">NPWS</div>
+    <div class="partner-logo-item">BirdWatch Ireland</div>
+    <div class="partner-logo-item">Breeding Waders EIP</div>
+    <div class="partner-logo-item">Coillte</div>
+    <div class="partner-logo-item">County Councils</div>
+  </div>
+  <div class="social-counter reveal reveal-delay-3">
+    <span class="counter-num">2,847</span>
+    <span class="counter-label">Hidden Homes protected this season</span>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ─── SECTION 6 — SECONDARY ACTIONS ─── -->
+<section id="actions">
+  <div class="actions-grid">
+
+    <div class="action-card reveal">
+      <div class="action-icon">
+        <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="8" y="6" width="28" height="32" rx="3"/>
+          <path d="M14 16h16M14 22h12M14 28h8"/>
+          <ellipse cx="28" cy="28" rx="5" ry="4" fill="rgba(200,168,75,0.2)" stroke="currentColor"/>
+          <ellipse cx="28" cy="28" rx="2" ry="1.5" fill="currentColor" opacity="0.6"/>
+        </svg>
+      </div>
+      <h3 class="action-heading">Bring it to the classroom</h3>
+      <p class="action-body">Download the Spot the Hidden Homes classroom activity pack for primary and secondary schools.</p>
+      <a href="#" class="btn-ghost">Download resource →</a>
+    </div>
+
+    <div class="action-card reveal reveal-delay-1">
+      <div class="action-icon">
+        <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 6C16 6 11 11 11 17c0 9 11 21 11 21s11-12 11-21c0-6-5-11-11-11z"/>
+          <circle cx="22" cy="17" r="3.5"/>
+          <ellipse cx="22" cy="30" rx="4" ry="3" fill="rgba(200,168,75,0.2)" stroke="currentColor"/>
+        </svg>
+      </div>
+      <h3 class="action-heading">Found a nest?</h3>
+      <p class="action-body">Report a sighting to help us track Hidden Homes across Ireland. Every record helps protect next season.</p>
+      <a href="#" class="btn-ghost">Submit a sighting →</a>
+    </div>
+
+    <div class="action-card reveal reveal-delay-2">
+      <div class="action-icon">
+        <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="10" y="6" width="24" height="32" rx="4"/>
+          <rect x="14" y="11" width="16" height="14" rx="2" fill="rgba(200,168,75,0.15)" stroke="currentColor"/>
+          <!-- Mini nest icon on phone -->
+          <path d="M18 17 Q22 15 26 17" stroke="currentColor" stroke-width="1.2" fill="none"/>
+          <ellipse cx="22" cy="19" rx="4" ry="2" fill="rgba(200,168,75,0.3)" stroke="currentColor" stroke-width="1"/>
+          <circle cx="20" cy="18" r="1.2" fill="currentColor" opacity="0.6"/>
+          <circle cx="22" cy="17.5" r="1.3" fill="currentColor" opacity="0.7"/>
+          <circle cx="24" cy="18" r="1.2" fill="currentColor" opacity="0.6"/>
+          <circle cx="22" cy="33" r="1.5" fill="rgba(200,168,75,0.4)" stroke="currentColor" stroke-width="1"/>
+        </svg>
+      </div>
+      <h3 class="action-heading">Spread the word</h3>
+      <p class="action-body">Share Hidden Homes with people who walk, hike, or farm in wader country. Awareness is protection.</p>
+      <a href="#" class="btn-ghost">Share the campaign →</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <span class="nav-logo-text">Hidden Homes</span>
+      <span class="footer-tagline">npws.ie/hiddenhomes</span>
+    </div>
+    <nav class="footer-nav">
+      <a href="#">About</a>
+      <a href="#">Map</a>
+      <a href="#">Schools</a>
+      <a href="#">Report a Nest</a>
+      <a href="#">Contact</a>
+      <a href="#">Privacy Policy</a>
+    </nav>
+    <div class="footer-partners">
+      <span class="footer-partner">NPWS</span>
+      <span class="footer-partner">BirdWatch Ireland</span>
+      <span class="footer-partner">Breeding Waders EIP</span>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">Hidden Homes is a campaign of the National Parks &amp; Wildlife Service Ireland. © NPWS 2025.</p>
+  </div>
+</footer>
+
+<script>
+  // Nav fade in on scroll
+  const nav = document.getElementById('main-nav');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 60) {
+      nav.classList.add('visible');
+    } else {
+      nav.classList.remove('visible');
+    }
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  reveals.forEach(el => observer.observe(el));
+
+  // Animated counter
+  function animateCounter(el, target, duration) {
+    let start = 0;
+    const step = (timestamp) => {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.floor(eased * target).toLocaleString();
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  const counterEl = document.querySelector('.counter-num');
+  if (counterEl) {
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateCounter(counterEl, 2847, 2000);
+          counterObserver.disconnect();
+        }
+      });
+    }, { threshold: 0.5 });
+    counterObserver.observe(counterEl);
+  }
+
+  // Stagger map pulse animations
+  document.querySelectorAll('.map-pulse').forEach((el, i) => {
+    el.style.animationDelay = `${i * 0.5}s`;
+  });
+</script>
+</body>
+</html>
